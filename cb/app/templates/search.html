@@ -1,0 +1,170 @@
+﻿{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Поиск | Досье Эмитента</title>
+
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" type="image/png" href="{% static 'new/img/favicon-32x32.png' %}" sizes="32x32">
+	<link rel="icon" type="image/png" href="{% static 'new/img/favicon-16x16.png' %}" sizes="16x16">
+
+    <link href="{% static 'js/jquery-ui/jquery-ui.min.css' %}" rel="stylesheet">
+    <link href="{% static 'js/jquery-ui/jquery-ui.theme.min.css' %}" rel="stylesheet">
+    <link href="{% static 'js/jquery-ui/jquery-ui.structure.min.css' %}" rel="stylesheet">
+    <link href="{% static 'new/css/fonts.css' %}" rel="stylesheet">
+    <link href="{% static 'new/css/material-components-web.min.css' %}" rel="stylesheet">
+    <link href="{% static 'new/css/search.css' %}" rel="stylesheet">
+	<link href="{% static 'new/css/all.css' %}" rel="stylesheet">
+    <link href="{% static 'new/css/data-table.css' %}" rel="stylesheet">
+</head>
+
+<body class="mdc-typography" onresize="resizing();">
+
+{% include 'navbar_new.html' %}
+
+    <main>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <form id="search_form" class="mdc-toolbar__row" method="post" action="">
+            <div class="form-cont mdc-toolbar__section" style="height:auto;">
+                <div class="form-fields-cont">
+                    {% csrf_token %}
+                    <div class="mdc-form-field" style="width:100%;">
+                        <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
+                            {{form.naimenovanie}}
+                            <label class="mdc-floating-label">Наименование</label>
+                            <div class="mdc-line-ripple"></div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="mdc-form-field" style="width: 59%; margin-right: 1%; float: left;">
+                        <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
+                            {{form.inn}}
+                            <label class="mdc-floating-label">ИНН</label>
+                            <div class="mdc-line-ripple"></div>
+                        </div>
+                    </div>
+                    <div class="mdc-form-field" style="width:40%;">
+                        <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
+                            {{form.ogrn}}
+                            <label class="mdc-floating-label">ОГРН</label>
+                            <div class="mdc-line-ripple"></div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="mdc-form-field" style="width:30%;">
+                        <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
+                            {{form.cod_emitenta}}
+                            <label class="mdc-floating-label">Код эмитента</label>
+                            <div class="mdc-line-ripple"></div>
+                        </div>
+                    </div>
+					<div class="limit_choice">
+						<div class="mdc-form-field">
+							Отображать по:
+						</div>
+						{% for radio in limit.values %}
+						<div class="mdc-form-field">
+							<div class="mdc-radio">
+								{{ radio.tag }}
+								<div class="mdc-radio__background">
+									<div class="mdc-radio__outer-circle"></div>
+									<div class="mdc-radio__inner-circle"></div>
+								</div>
+							</div>
+							<label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+						</div>
+						{% endfor %}
+					</div>
+					<button type="submit" class="mdc-button mdc-button--raised mdc-ripple-surface"
+						data-mdc-auto-init="MDCRipple" id="submit_form">
+						ПОИСК
+					</button>
+				</div>
+            </div>
+        </form>
+
+        <button id="toTop" class="mdc-fab material-icons app-fab--absolute"
+				aria-label="To top" data-mdc-auto-init="MDCRipple" style="opacity:0;">
+			<span class="mdc-fab__icon">arrow_upward</span>
+		</button>
+		
+		<div class="resultsQ-cont" style="display:none;">
+			<span class="first"></span>
+			<p class="mdc-typography--body1 resultsQ"></p>
+			<p class="mdc-typography--body1 resultsQl" style="margin:0 15px 0 0;">найден</p>
+			<span class="second"></span>
+		</div>
+
+        <div class="table-cont">
+            <table class="mdl-data-table mdl-js-data-table mdc-elevation--z2" style="display:none;">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th class="mdl-data-table__cell--non-numeric">Наименование</th>
+                        <th>ИНН</th>
+                        <th>ОГРН</th>
+                        <th>Код эмитента</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in queryset %}
+                    <tr>
+                        <td>{{ i.id }}</td>
+                        <td class="mdl-data-table__cell--non-numeric">
+							<a href="{% url 'edit/kartochka_kompanii' i.id %}" target="_blank">{{ i.naimenovanie }}</a>
+						</td>
+                        <td>{{ i.inn }}</td>
+                        <td>{{ i.ogrn }}</td>
+                        <td>{{ i.cod_emitenta }}</td>
+                    </tr>
+					{% empty %}
+					<div class="nothing-to-show">
+						<img src="/static/new/img/visib2.png">
+						<br>
+						<h1 class="mdc-typography--headline6">Здесь пока нечего отображать :(</h1>
+					</div>
+                    {% endfor %}
+					
+					<!-- проверяем инпуты на наличие текста, и если он есть, -->
+					<!-- а результатов в выдаче нет - алертим -->
+					{% if toomany %}
+					<script>setTimeout(function() {callAlert(1)}, 1000);</script>
+					{% endif %}
+					{% if nores %}
+					<script>setTimeout(function() {callAlert(0)}, 1000);</script>
+					{% endif %}
+                </tbody>
+            </table>
+			
+            <div class="view-more" style="display:none;">
+                <button id="more-button" class="mdc-button">
+					<i id="more-icon" class="material-icons mdc-button__icon">expand_more</i>
+					Больше
+				</button>
+            </div>
+        </div>
+
+    </main>
+
+{% include 'dialogs.html' %}
+
+    <!-- Если разместить js-скрипты в конце будет вроде как лучше -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery-ui/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'new/js/paging.js' %}"></script>
+    <script src="{% static 'new/js/material-components-web.min.js' %}"></script>
+    <script src="{% static 'new/js/general.js' %}"></script>
+    <script src="{% static 'new/js/search.js' %}"></script>
+</body>
+
+</html>

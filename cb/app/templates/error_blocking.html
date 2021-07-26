@@ -1,0 +1,48 @@
+﻿{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Ошибка</title>
+
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" type="image/png" href="{% static 'new/img/favicon-32x32.png' %}" sizes="32x32">
+	<link rel="icon" type="image/png" href="{% static 'new/img/favicon-16x16.png' %}" sizes="16x16">
+
+    <link href="{% static 'js/jquery-ui/jquery-ui.min.css' %}" rel="stylesheet">
+    <link href="{% static 'js/jquery-ui/jquery-ui.theme.min.css' %}" rel="stylesheet">
+    <link href="{% static 'js/jquery-ui/jquery-ui.structure.min.css' %}" rel="stylesheet">
+    <link href="{% static 'new/css/fonts.css' %}" rel="stylesheet">
+    <link href="{% static 'new/css/material-components-web.min.css' %}" rel="stylesheet">
+    <link href="{% static 'new/css/error.css' %}" rel="stylesheet">
+</head>
+
+<body class="mdc-typography">
+
+    <main>
+        <div class="error--content">
+            <div class="error--subcontent">
+                <img class='error--image' src='/static/new/img/no-enter.png'>
+                <p class='error--title mdc-typography--headline3'>Остановитесь!</p>
+                <div class="error--body">
+                    <p class="mdc-typography--subtitle1">
+                        Система в данный момент обновляется другим пользователем. 
+                        При отображении карточки могут возникнуть ошибки. Подождите немного
+                        <br><br>
+                        P.S. Тот, кто обновляет, может сказать Вам, сколько осталось до конца ;)
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Если разместить js-скрипты в конце будет вроде как лучше -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery-ui/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'new/js/material-components-web.min.js' %}"></script>
+</body>
+
+</html>

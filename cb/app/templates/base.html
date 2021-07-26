@@ -1,0 +1,134 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Главная | Досье Эмитента</title>
+
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" type="image/png" href="{% static 'new/img/favicon-32x32.png' %}" sizes="32x32">
+	<link rel="icon" type="image/png" href="{% static 'new/img/favicon-16x16.png' %}" sizes="16x16">
+
+    <link href="{% static 'js/jquery-ui/jquery-ui.min.css' %}" rel="stylesheet">
+    <link href="{% static 'js/jquery-ui/jquery-ui.theme.min.css' %}" rel="stylesheet">
+    <link href="{% static 'js/jquery-ui/jquery-ui.structure.min.css' %}" rel="stylesheet">
+    <link href="{% static 'new/css/fonts.css' %}" rel="stylesheet">
+    <link href="{% static 'new/css/material-components-web.min.css' %}" rel="stylesheet">
+	<link href="{% static 'new/css/simplebar.css' %}" rel="stylesheet">
+	<link href="{% static 'new/css/all.css' %}" rel="stylesheet">
+	<link href="{% static 'new/css/main.css' %}" rel="stylesheet">
+</head>
+
+<body class="mdc-typography" id="scroll-bg" onresize="resizing();">
+
+{% include 'navbar_new.html' %}
+
+    <main>
+		<p class="hello-text">
+			<span class="welcome"></span>
+			<br>
+			<span class="status">Система <span style="color:#00E676;">активна</span></span>
+			<br>
+			<span class="emitents">Эмитентов: <b>{{count}}</b></span>
+		</p>
+		
+		<p id="clock"></p>
+		
+		<div class="mdc-elevation--z5 history up-fade {% if not user.is_superuser %}no-actions{% else %}showing-actions{% endif %}">
+            <div class="hist-top mdc-toolbar mdc-toolbar--fixed mdc-toolbar--waterfall mdc-toolbar--flexible-space-maximized">
+                <div class="header-row mdc-toolbar__row">
+                    <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
+                        <span class="mdc-toolbar__title">Все последние изменения</span>
+                    </section>
+                    <section class="mdc-toolbar__section mdc-toolbar__section--align-end">
+                        <i id="hist-close" class="material-icons mdc-icon-toggle md-30"
+                           role="button" onclick="">close</i>
+                    </section>
+                </div>
+                <div class="actions-row mdc-toolbar__row">
+                	<section class="mdc-toolbar__section mdc-toolbar__section--align-start">
+						<div class="mdc-chip-set">
+							<div class="delete mdc-chip" tabindex="0">
+								<i class="material-icons mdc-chip__icon mdc-chip__icon--leading">delete</i>
+								<div class="mdc-chip__text">Удалить</div>
+							</div>
+							<div class="select-all mdc-chip">
+								<i class="material-icons mdc-chip__icon mdc-chip__icon--leading">add_circle_outline</i>
+								<div class="mdc-chip__checkmark" >
+								  <svg class="mdc-chip__checkmark-svg" viewBox="-2 -3 30 30">
+									<path class="mdc-chip__checkmark-path" fill="none" stroke="black"
+										  d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+								  </svg>
+								</div>
+								<div class="mdc-chip__text">Выделить все</div>
+							</div>
+							<div class="get-new mdc-chip" tabindex="0">
+								<div class="mdc-chip__text">Новые</div>
+							</div>
+						</div>
+                	</section>
+                </div>
+            </div>
+            <div class="ovf-shade" style="display:none"></div>
+			<div class="hist-inner" id="scroll">
+				<ul class="hist-list mdc-list mdc-list--two-line mdc-list--avatar-list
+						   demo-list demo-list--icon-placeholders demo-list--with-avatars">
+		
+						   
+						{% for entry in entry_list %}
+						   <li class="mdc-list-item">
+							   <span class="mdc-list-item__graphic" role="presentation">
+								   <i class="material-icons" aria-hidden="true">{{ entry.icon }}</i>
+							   </span>
+							   <span class="mdc-list-item__text">
+								   {{ entry.type}} 
+								   {% if entry.type == 'Редактирование эмитента' %}
+								   <a href="{% url 'edit/kartochka_kompanii' value.id %}" target="_blank">№{{ entry.object_id }}</a>
+								   {% endif %}
+								   <span class="mdc-list-item__secondary-text">{{ entry.datetime }}, <span class="hist-user">{{ entry.user }}</span></span>
+							   </span>
+							   <span class="mdc-list-item__meta">
+								   <div class="mdc-checkbox hist-check">
+									   <input type="checkbox" class="mdc-checkbox__native-control">
+									   <div class="mdc-checkbox__background">
+										   <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+											   <path class="mdc-checkbox__checkmark-path" fill="none" stroke="white" d="M1.73,12.91 8.1,19.28 22.79,4.59"></path>
+										   </svg>
+										   <div class="mdc-checkbox__mixedmark"></div>
+									   </div>
+								   </div>
+							   </span>
+							
+						   </li>		
+						{% endfor %}			
+				</ul>
+				</div>
+
+			<div class="mdc-card__actions mdc-card__actions--full-bleed">
+				<a class="mdc-button mdc-card__action mdc-card__action--button hist-action" data-mdc-auto-init="MDCRipple">
+					ВСЕ ПОСЛЕДНИЕ ИЗМЕНЕНИЯ
+					<i class="material-icons" aria-hidden="true">arrow_forward</i>
+				</a>
+			</div>
+		</div>
+		<div class="hist-back mdc-dialog__backdrop"></div>
+		
+	</main>
+	
+{% include 'dialogs.html' %}	
+
+    <!-- Если разместить js-скрипты в конце будет вроде как лучше -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery-ui/jquery-ui.min.js' %}"></script>
+	<script src="{% static 'new/js/simplebar.js' %}"></script>
+	<script src="{% static 'new/js/material-components-web.min.js' %}"></script>
+	<script src="{% static 'new/js/main.js' %}"></script>
+	<script src="{% static 'new/js/general.js' %}"></script>
+	<script src="{% static 'new/js/jquery.waypoints.min.js' %}"></script>
+	<script src="{% static 'new/js/infinite.min.js' %}"></script>
+</body>
+
+</html>

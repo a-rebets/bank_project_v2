@@ -1,0 +1,302 @@
+{% load staticfiles %} {% include 'navbar.html' %} {% load bootstrap %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/static/img/logo.ico">
+    <title>Корп контроль</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/ie10-viewport-bug-workaround.css' %}" rel="stylesheet">
+    <link href="{% static 'css/navbar-fixed-top.css' %}" rel="stylesheet">
+    <link href="{% static 'js/jquery-ui/jquery-ui.min.css' %}" rel="stylesheet">
+    <link href="{% static 'js/jquery-ui/jquery-ui.theme.min.css' %}" rel="stylesheet">
+    <link href="{% static 'js/jquery-ui/jquery-ui.structure.min.css' %}" rel="stylesheet">
+    <link href="{% static 'js/nprogress/nprogress.css' %}" rel="stylesheet">
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet">
+    <script src="{% static 'js/ie-emulation-modes-warning.js' %}"></script>
+</head>
+
+<body>
+	                <script src="{% static 'js/jquery.min.js' %}"></script>
+
+    <div class="container">
+        <div class="jumbotron">
+            <nav  class="navbar navbar-default" role="navigation">
+                <div  class="container-fluid">
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li><a href="{% url 'edit/kartochka_kompanii' id %}">Карточка компании</a></li>
+                            <li class="active"><a href="{% url 'edit/korp_kontrol' id %}">Корп контроль</a></li>
+                            
+                        </ul>
+                    </div>
+                    <!-- /.navbar-collapse -->
+                </div>
+                <!-- /.container-fluid -->
+            </nav>
+            <div class="title" style="text-align: center; padding-bottom: 5px;">Корп контроль "{{ title }}"</div>
+            <div class="row">
+                <div class="jumbotron">
+                    <hr>
+                    <div style="text-align: center;"><h3>Контроль за передачей реестра акционеров регистратору</h3></div>
+                    <hr>
+                    <div class="row">
+                        <form method="post" id="post-form" action="">
+                            {% csrf_token %}
+                            <div class="col-sm-3">
+                            	<label><h4>Реестр передан:</h4></label>
+                                <div class="form-check form-check-inline">
+                                	
+                                    {{form.registrator1|bootstrap}}
+
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div id="div1" style="display: block;">
+                                    {{form.naimenovanie_registratora|bootstrap}}
+                                </div>
+                                <hr>
+                                <script type="text/javascript">
+                                    document.getElementById("id_registrator1_0").onchange = function() {
+                                        show()
+                                    };
+                                    document.getElementById("id_registrator1_1").onchange = function() {
+                                        shownone()
+                                    };
+                                    document.getElementById("id_registrator1_2").onchange = function() {
+                                        show()
+                                    };
+                                    document.getElementById("id_registrator1_3").onchange = function() {
+                                        show()
+                                    };
+                                    window.onload;
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        var inp = document.getElementsByName('registrator1');
+                                        for (var i = 0; i < inp.length; i++) {
+                                            if (inp[i].type == "radio" && inp[i].checked) {
+                                                var evt = document.createEvent("HTMLEvents");
+                                                evt.initEvent("change", false, true);
+                                                inp[i].dispatchEvent(evt);
+                                            }
+                                        }
+                                    });
+                                    function show() {
+                                        document.getElementById('div1').style.display = 'inline';
+                                        document.getElementById('div2').style.display = 'none';
+                                    }
+                                    function shownone() {
+                                        document.getElementById('div1').style.display = 'none';
+                                        document.getElementById('div2').style.display = 'inline';
+                                    }
+                                    $("input[id='']").val("123");
+                                </script>
+                            </div>
+                            <div id="div2" style="display: none;">
+                                <br><br><br><br><br><br><br><br>
+                                
+                               <br>
+                                <div style="margin-left: 15px" class="row">
+                                	<label class="col-sm-9">
+                                	<div style="margin-left: -30px" class="col-sm-1">
+                              			<div>{{form1.zapros_o_predostavlenii_informacii|bootstrap}}</div>
+                                	</div>
+
+                                	<div style="margin-left: -30px" class="col-sm-10">
+                                		<h4> Запрос о предоставлении информации</h4> 
+                                	</div>
+                                	</label>
+
+                                	<div class="col-sm-3 panel panel-default" id="div3" style="display:none; width: 70%;">
+                                        <br>
+                                        <p>№ {{form.nomer_zaprosa_po_reestru}} от {{form.data_zaprosa_po_reestru}} </p>
+                                    </div>
+
+
+
+                                    <br><br>
+
+                                    <label class="col-sm-11">
+                                	<div style="margin-left: -30px" class="col-sm-1">
+                              			<div>{{form1.predpisanie_ob_istrebovanii_documentov|bootstrap}}</div>
+                                	</div>
+
+                                	<div style="margin-left: -44px" class="col-sm-6">
+                                		<h4> Предписание об истребовании документов</h4>
+                                	</div>
+
+                                	</label>
+
+                                	 <div class="col-sm-3 panel panel-default" id="div4" style="display:none; width: 70%;">
+                                        <br>
+                                        <p>№ {{form.nomer_predpisanya_o_predstavlenii_documentov}} от {{form.data_predpisanya_o_predstavlenii_documentov}}
+                                            <br>
+                                            <br> {{form1.polucheno_1_2_bool|bootstrap}} <div id='div9'>{{form1.polucheno_1_2|bootstrap}}</div>
+                                            <br> Срок для исполнения: {{form1.srok_dla_inspolnenia_1|bootstrap}}
+                                            <br> {{form1.data_instechenia_sroka_inpolnenia_1|bootstrap}}
+                                            <br>
+                                            <p>Ответ № {{form1.otvet_1_2|bootstrap}} от {{form1.data_otveta_1_2|bootstrap}}</p>
+                                            <br>
+                                            <p>{{form1.ispolneno_1_2|bootstrap}}</p>
+                                    </div>
+
+
+
+                                    <br><br>
+
+                                    <label class="col-sm-12">
+                                	<div style="margin-left: -30px" class="col-sm-1">
+                              			<div>{{form1.prepsanie_ob_ustranenii_narusheniya_zakonodatelstva_RF|bootstrap}}</div>
+                                	</div>
+
+                                	<div style="margin-left: -50px" class="col-sm-8">
+                                		<h4> Предписание об устранении нарушения законодательства РФ</h4>
+                                	</div>
+                                	</label>
+                                                                    
+                                    <div class="col-sm-3 panel panel-default" id="div5" style="display:none; width: 70%">
+                                        <br>
+                                        <p>№ {{form.nomer_predpisanya_o_predstavlenii_documentov}} от {{form.data_predpisanya_o_predstavlenii_documentov}}</p>
+                                        <br>
+                                        <br> {{form1.polucheno_1_3_bool|bootstrap}} <div id="div10">{{form1.polucheno_1_3|bootstrap}}</div>
+                                        <br> Срок для исполнения: {{form1.srok_dla_inspolnenia_1_3|bootstrap}}
+                                        <br> {{form1.data_instechenia_sroka_inpolnenia_1_3|bootstrap}}
+                                        <br>
+                                        <p>Ответ № {{form1.otvet_1_3|bootstrap}} от {{form1.data_otveta_1_3|bootstrap}}</p>
+                                        <br>
+                                        <p>{{ form1.ispolneno_1_3|bootstrap }}</p>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                           
+                    </div>
+                    <hr>
+                    <div style="text-align: center;"><h3>Контроль за предоставлением документов для регистрации выпуска акций, размещаемого при учреждении акционерного общества</h3></div>
+                    <hr>
+                    <br>
+                    <div class="col-sm-6">
+                        {{ form.cod_emitenta|bootstrap }}
+                    </div>
+                    <div class="col-sm-5">
+                        {{ form1.data_proverki|bootstrap }}
+                    </div>
+                    <p style="font-family: helvetica; text-align: left; font-size: 16px; color: black; margin-top: 50px;">Предписание об устранении нарушения законодательства РФ </p>
+                    <p>№ {{form.nomer_predpisaniya_po_reestru }} от {{ form.data_predpisanya_po_reestru }}</p>
+                    <div class="col-sm-6">
+                        <p>{{ form1.polucheno_2|bootstrap }}</p>
+                        <p>{{ form1.srok_dla_inspolnenia_2|bootstrap}}</p>
+                        <p>{{ form1.data_instechenia_sroka_inpolnenia_2|bootstrap }}</p>
+                        <p>{{ form1.dokumenti_predstavleni_2|bootstrap }}</p>
+                        <p>{{ form1.ispolneno_2|bootstrap }}</p>
+                        <hr>
+                    </div>
+                    <div class="col-sm-5"></div>
+                    <br>
+                    <br>
+                    <hr style="margin-top:400px;" >
+                    <div style="text-align: center;"><h3>Контроль за проведением годового общего собрания акционеров</h3></div>
+                    <hr>
+                    <div style="margin-left: 15px ">
+                        <div class="row">
+
+
+
+                        	<label class="col-sm-11">
+                        	<div style="margin-left: -30px" class="col-sm-1">
+                      			<div>{{form1.informaciaya_o_gosah_s_saitov_raskritiya_informacii|bootstrap}}</div>
+                        	</div>
+
+                        	<div style="margin-left: -44px" class="col-sm-8">
+                        		<h4>Информация о ГОСА с сайтов раскрытия информации</h4>
+                        	</div>
+
+                        	</label>
+
+
+
+
+                            <div class="col-sm-3 panel panel-default" id='div6' style="display:none; width: 70%;">
+                                {{form1.data_provedinia_3_1_1|bootstrap}} {{form1.data_sostavlenia_spiska_lich_imeushih_pravo_na_uchastie_v_gosa|bootstrap}} {{form.data_provedeniya_gosa|bootstrap}} {{form1.data_sostavlenia_protokola_gosa|bootstrap}} {{form1.povestka_dnia_gosa|bootstrap}} {{form1.sroki_provedenia_gosa_po_ustavu|bootstrap}}
+                            </div>
+
+
+                            <div>
+                            <label class="col-sm-11">
+                        	<div style="margin-left: -30px" class="col-sm-1">
+                      			<div>{{form1.zapros_o_predostavlenii_informacii_3_2|bootstrap}}</div>
+                        	</div>
+
+                        	<div style="margin-left: -44px" class="col-sm-8">
+                        		<h4>Запрос о предоставлении информации</h4>
+                        	</div>
+
+                        	</label>
+
+                        	</div>
+
+
+                            <div class="col-sm-3 panel panel-default" id='div7' style="display:none; width: 70%;">
+                                <br>
+                                <p>№ {{form.nomer_zaprosa_po_gosa}} от {{form.data_zaprosa_po_gosa}}</p>
+                            </div>
+
+
+
+
+                            <div>
+
+                            <label class="col-sm-11">
+                        	<div style="margin-left: -30px" class="col-sm-1">
+                      			<div>{{form1.predpisanie_ob_istrebovanii_documentov_3_3|bootstrap}}</div>
+                        	</div>
+
+                        	<div style="margin-left: -44px" class="col-sm-8">
+                        		<h4>Предписание об истребовании документов</h4>
+                        	</div>
+
+                        	</label>
+
+                        	</div>
+
+                            <div class="col-sm-3 panel panel-default" id='div8' style="display:none; width: 70%;">
+                                <br>
+                                <p>№ {{form.nomer_predpisanya_o_predstavlenii_documentov_gosa}} от {{form.data_predpisanya_o_predstavlenii_documentov_gosa}}</p>
+                                <br>
+                                <p>{{form1.polucheno_3_3|bootstrap}}</p>
+                                <br>
+                                <p>{{ form1.srok_dla_inspolnenia_3_3|bootstrap}}</p>
+                                <br>
+                                <p>{{ form1.data_instechenia_sroka_inpolnenia_3_3|bootstrap }}</p>
+                                <br>
+                                <p>Ответ № {{form1.otvet_3_3|bootstrap}} от {{form1.data_otveta_3_3|bootstrap}}</p>
+                                <br>
+                                <p>{{ form1.ispolneno_3_3|bootstrap }}</p>
+                            </div>
+                        </div>
+                        <input style="margin-top: 20px; margin-right: 900px;" class='btn btn-danger' type="submit" value="Сохранить" />
+                    </div>
+                    </form>
+                </div>
+                <!-- Bootstrap core JavaScript
+         ================================================== -->
+                <!-- Placed at the end of the document so the pages load faster -->
+                <script src="{% static 'js/jquery.min.js' %}"></script>
+                <script src="{% static 'js/jquery-ui/jquery-ui.min.js' %}"></script>
+                <script src="{% static 'js/pager/paging.js' %}"></script>
+                <script src="{% static 'js/nprogress/nprogress.js' %}"></script>
+                <script src="{% static 'js/custom.js' %}"></script>
+                <script>
+                    window.jQuery || document.write('<script src="{% static '
+                        js / jquery.min.js ' %}"><\/script>')
+                </script>
+                <script src="{% static 'js/bootstrap.min.js' %}"></script>
+                <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+                <script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
+</body>
+
+</html>

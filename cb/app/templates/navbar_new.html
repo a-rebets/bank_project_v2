@@ -1,0 +1,62 @@
+	<header class="mdc-toolbar mdc-toolbar--fixed">
+		<div role="progressbar" class="mdc-linear-progress" id="progress">
+			<div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+				<span class="mdc-linear-progress__bar-inner"></span>
+			</div>
+		</div>
+		
+        <div class="mdc-toolbar__row">
+            <section class="mdc-toolbar__section mdc-toolbar__section--align-start logo-section">
+                <a href="/index" class="logo"><img src='/static/new/img/CB-logo.png'></a>
+            </section>
+            <section class="mdc-toolbar__section mdc-toolbar__section--align-end" style="padding:0 40px 0 0;">
+                <nav id="main-nav" class="mdc-tab-bar">
+					<a class="mdc-tab" href="/index">
+						ГЛАВНАЯ
+						<span class="mdc-tab__indicator"></span>
+					</a>
+                    <a class="mdc-tab" href="/search">
+						ПОИСК
+						<span class="mdc-tab__indicator"></span>
+					</a>
+                    <a class="mdc-tab" href="/selections">
+						ВЫБОРКА
+						<span class="mdc-tab__indicator"></span>
+					</a>
+                    <a class="mdc-tab" href="/db_update">
+						ОБНОВЛЕНИЕ
+						<span class="mdc-tab__indicator"></span>
+					</a>
+				</nav>
+				
+				<i id="user-tab" class="material-icons mdc-icon-toggle md-30 mdc-menu-anchor"
+				   {% if user.is_authenticated %}role="button" onclick="userMenu()">
+					person
+				   {% else %}role="button" onclick="showLogin()">
+					person_outline{% endif %}
+				</i>
+				
+				<div class="mdc-menu" tabindex="-1">
+					<p class="us_inf-name mdc-menu__items">
+						Вы вошли как 
+						<span>{% if user.is_authenticated %}{{ user.username }}{% else %}username{% endif %}</span>
+					</p>
+					<div class="us_inf-buttons">
+						<button type="button" class="mdc-button user-settings">
+							<i class="material-icons mdc-button__icon md-24">settings</i>
+							Настройки
+						</button>
+						<button type="button" class="mdc-button mdc-button--unelevated exit">
+							<i class="material-icons mdc-button__icon md-24">exit_to_app</i>
+							Выход
+						</button>
+					</div>
+				</div>
+            </section>
+        </div>
+	</header>
+	
+	<div class="login-alert mdc-toolbar__row">
+		<p class="login-text">C возвращением, </p>
+		<p class="login-text">авторизация прошла успешно</p>
+	</div>

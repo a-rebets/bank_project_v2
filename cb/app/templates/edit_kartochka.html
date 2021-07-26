@@ -1,0 +1,875 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Карточка | Досье Эмитента</title>
+
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" type="image/png" href="{% static 'new/img/favicon-32x32.png' %}" sizes="32x32">
+	<link rel="icon" type="image/png" href="{% static 'new/img/favicon-16x16.png' %}" sizes="16x16">
+
+    <link href="{% static 'js/jquery-ui/jquery-ui.min.css' %}" rel="stylesheet">
+    <link href="{% static 'js/jquery-ui/jquery-ui.theme.min.css' %}" rel="stylesheet">
+    <link href="{% static 'js/jquery-ui/jquery-ui.structure.min.css' %}" rel="stylesheet">
+    <link href="{% static 'new/css/fonts.css' %}" rel="stylesheet">
+    <link href="{% static 'new/css/material-components-web.min.css' %}" rel="stylesheet">
+    <link href="{% static 'new/css/datepicker.css' %}" rel="stylesheet">
+    <link href="{% static 'new/css/all.css' %}" rel="stylesheet">
+    <link href="{% static 'new/css/card.css' %}" rel="stylesheet">
+</head>
+
+<body class="card mdc-typography" onresize="resizing();">
+
+    <header class="card--general-info">
+        <div class="card--section-top">
+            <div role="progressbar" class="mdc-linear-progress" id="progress">
+                <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+                    <span class="mdc-linear-progress__bar-inner"></span>
+                </div>
+            </div>
+            <div class="card--section-top-content">
+                <p class="top-opf mdc-typography--headline3">{{ opf }}</p>
+                <div class="card--heading card--heading-modifying mdc-typography--headline4"><span>{{ title }}</span></div>
+                <i id="user-tab" class="material-icons mdc-icon-toggle md-30"
+                    {% if user.is_authenticated %}role="button" onclick="userMenu()">
+                    person
+                    {% else %}role="button" onclick="showLogin()">
+                    person_outline{% endif %}
+                </i>
+                <div class="mdc-menu" tabindex="-1">
+                    <p class="us_inf-name mdc-menu__items">
+                        Вы вошли как 
+                        <span>{% if user.is_authenticated %}{{ user.username }}{% else %}username{% endif %}</span>
+                    </p>
+                    <div class="us_inf-buttons">
+                        <button type="button" class="mdc-button user-settings">
+                            <i class="material-icons mdc-button__icon md-24">settings</i>
+                            Настройки
+                        </button>
+                        <button type="button" class="mdc-button mdc-button--unelevated exit">
+                            <i class="material-icons mdc-button__icon md-24">exit_to_app</i>
+                            Выход
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card--pages mdc-toolbar">
+            <div class="mdc-toolbar__row">
+                <button class="go-back mdc-button" data-mdc-auto-init="MDCRipple">
+                    <i class="material-icons mdc-button__icon" aria-hidden="true">arrow_back</i>
+                        Вернуться
+                </button>
+                <section class="mdc-toolbar__section">
+                    <nav id="card--pages-nav" class="mdc-tab-bar">
+                        <a class="mdc-tab mdc-tab--active">Карточка компании</a>
+                        <a class="mdc-tab">Раскрытие</a>
+                        <a class="mdc-tab">Административка</a>
+                        <a class="mdc-tab">Взаимодействие с гос. органами</a>
+                        <a class="mdc-tab" target="_blank" href="{% url 'edit/korp_kontrol' id %}">Корп. контроль</a>
+                        <span class="mdc-tab-bar__indicator"></span>
+                    </nav>
+                </section>
+            </div>
+        </div>
+    </header>
+
+    <main class="card--content">
+
+        <div class="mdc-layout-grid">
+            <form method="post" action="" class="card--form">
+                {% csrf_token %}
+                <input type = "hidden" name="which_changed" value="" id="check-forms">
+                <div class="section0 mdc-layout-grid__inner">
+                    <div class="card--content-block mdc-layout-grid__cell mdc-elevation--z1 mdc-layout-grid__cell--span-10">
+                        <div class="mdc-form-field">
+                            <h2 class="block-header mdc-typography--subtitle1">Наименование</h2>
+                            <div class="custom-text-field-with-icon">
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.0.naimenovanie}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                                <i class="clear-field custom-text-field-icon-trailing mdc-icon-toggle material-icons" role="button" tabindex="0">
+                                    delete
+                                </i>
+                            </div>
+                        </div>
+                        <div class="with-sub">
+                            <div class="mdc-form-field card--content-subblock status">
+                                <h2 class="block-header mdc-typography--subtitle1">Статус</h2>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.0.status}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                            <div class="mdc-form-field card--content-subblock opf no-input">
+                                <h2 class="block-header mdc-typography--subtitle1">ОПФ</h2>
+                                {{forms.0.opf}}
+                                <div class="mdc-select custom-select">
+                                    <select class="mdc-select__native-control">
+                                        <option value="" disabled selected>Не выбрано</option>
+                                        <option value="АО">
+                                            АО
+                                        </option>
+                                        <option value="АОЗТ">
+                                            АОЗТ
+                                        </option>
+                                        <option value="АООТ">
+                                            АООТ
+                                        </option>
+                                        <option value="ЗАО">
+                                            ЗАО
+                                        </option>
+                                        <option value="НАО">
+                                            НАО
+                                        </option>
+                                        <option value="ОАО">
+                                            ОАО
+                                        </option>
+                                        <option value="ПАО">
+                                            ПАО
+                                        </option>
+                                    </select>
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                            <div class="mdc-form-field card--content-subblock regist-date">
+                                <h2 class="block-header mdc-typography--subtitle1">Дата регистрации</h2>
+                                <div class="custom-text-field-with-icon">
+                                    <i class="custom-text-field-icon-heading mdc-icon-toggle material-icons" role="button" tabindex="0">
+                                        event
+                                    </i>
+                                    <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                        {{forms.0.data_registracii}}
+                                        <div class="mdc-line-ripple"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card--content-block with-sub mdc-layout-grid__cell mdc-layout-grid__cell--span-5 mdc-elevation--z1">
+                        <div class="card--content-subblock">
+                            <div class="mdc-form-field">
+                                <h2 class="block-header mdc-typography--subtitle1">ИНН</h2>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.0.inn}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                            <div class="mdc-form-field">
+                                <h2 class="block-header mdc-typography--subtitle1">ОГРН</h2>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.0.ogrn}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card--content-subblock">
+                            <div class="mdc-form-field">
+                                <h2 class="block-header mdc-typography--subtitle1">КПП</h2>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.0.kpp}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                            <div class="mdc-form-field">
+                                <h2 class="block-header mdc-typography--subtitle1">Код эмитента</h2>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.0.cod_emitenta}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card--content-block mdc-layout-grid__cell mdc-layout-grid__cell--span-5 mdc-elevation--z1">
+                        <div class="mdc-form-field">
+                            <h2 class="block-header mdc-typography--subtitle1">Адрес</h2>
+                            <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                {{forms.0.adres}}
+                                <div class="mdc-line-ripple"></div>
+                            </div>
+                        </div>
+                        <div class="mdc-form-field">
+                            <h2 class="block-header mdc-typography--subtitle1">Регион</h2>
+                            <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                {{forms.0.region}}
+                                <div class="mdc-line-ripple"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card--content-block mdc-layout-grid__cell mdc-layout-grid__cell--span-5 mdc-elevation--z1">
+                        <div class="mdc-form-field">
+                            <h2 class="block-header mdc-typography--subtitle1">Единоличный исполнительный орган</h2>
+                            <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                {{forms.0.edinolichny_ispolnitelny_organ}}
+                                <div class="mdc-line-ripple"></div>
+                            </div>
+                        </div>
+                        <div class="mdc-form-field">
+                            <h2 class="block-header mdc-typography--subtitle1">Контактные данные</h2>
+                            <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                {{forms.0.contactny_dannye}}
+                                <div class="mdc-line-ripple"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card--content-block mdc-layout-grid__cell mdc-layout-grid__cell--span-5 mdc-elevation--z1">
+                        <div class="mdc-form-field">
+                            <h2 class="block-header mdc-typography--subtitle1">Лицевых счетов в реестре</h2>
+                            <div class="custom-text-field-with-icon custom-integer">
+                                <i class="custom-text-field-icon-heading mdc-icon-toggle material-icons" role="button" tabindex="0">
+                                    chevron_left
+                                </i>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.0.kolichestvo_licevyh_schetov_v_reestre}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                                <i class="custom-text-field-icon-trailing mdc-icon-toggle material-icons" role="button" tabindex="0">
+                                    chevron_right
+                                </i>
+                            </div>
+                        </div>
+                        <div class="mdc-form-field">
+                            <h2 class="block-header mdc-typography--subtitle1">Номинальных держателей в реестре</h2>
+                            <div class="custom-text-field-with-icon custom-integer">
+                                <i class="custom-text-field-icon-heading mdc-icon-toggle material-icons" role="button" tabindex="0">
+                                    chevron_left
+                                </i>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.0.kolichestvo_nominalnyh_derzhateley_v_reestre}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                                <i class="custom-text-field-icon-trailing mdc-icon-toggle material-icons" role="button" tabindex="0">
+                                    chevron_right
+                                </i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card--content-block mdc-layout-grid__cell mdc-layout-grid__cell--span-4 mdc-elevation--z1">
+                        <div class="mdc-form-field no-input">
+                            <h2 class="block-header mdc-typography--subtitle1">Движение денежных средств</h2>
+                            {{forms.0.dvizhenie_denezhnyh_sredstv}}
+                            <div class="custom-choice-field mdc-chip-set mdc-chip-set--choice">
+                                <div class="mdc-chip" tabindex="0">
+                                    <div class="mdc-chip__text">Да</div>
+                                </div>
+                                <div class="mdc-chip" tabindex="0">
+                                    <div class="mdc-chip__text">Нет</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mdc-form-field">
+                            <h2 class="block-header mdc-typography--subtitle1">Дата последней операции</h2>
+                            <div class="custom-field-shrink-width custom-text-field-with-icon">
+                                <i class="custom-text-field-icon-heading mdc-icon-toggle material-icons" role="button" tabindex="0">
+                                    event
+                                </i>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.0.data_posledney_operacii}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card--content-block mdc-layout-grid__cell mdc-layout-grid__cell--span-6 mdc-elevation--z1">
+                        <div class="mdc-form-field debts">
+                            <h2 class="block-header mdc-typography--subtitle1">Задолженность перед ФНС</h2>
+                            <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                {{forms.0.zadolzhennost_pered_fns}}
+                                <div class="mdc-line-ripple"></div>
+                            </div>
+                        </div>
+                        <div class="mdc-form-field accounting">
+                            <h2 class="block-header mdc-typography--subtitle1">Отчетность</h2>
+                            <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                {{forms.0.otchetnost}}
+                                <div class="mdc-line-ripple"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section1 mdc-layout-grid__inner slide-intermediate right-curtain">
+                    <div class="card--content-block mdc-layout-grid__cell mdc-layout-grid__cell--span-4 mdc-elevation--z1">
+                        <div class="mdc-form-field no-input">
+                            <h2 class="block-header mdc-typography--subtitle1">ПАО в силу признаков</h2>
+                            {{forms.1.pao_v_silu_priznakov_st30}}
+                            {{forms.1.pao_v_silu_priznakov_bez_st30}}
+                            <div class="custom-checkbox-field custom-text-field-with-icon">
+                                <div class="mdc-checkbox">
+                                    <input type="checkbox" class="mdc-checkbox__native-control">
+                                    <div class="mdc-checkbox__background">
+                                        <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                                            <path class="mdc-checkbox__checkmark-path" fill="none" stroke="white" d="M1.73,12.91 8.1,19.28 22.79,4.59"></path>
+                                        </svg>
+                                        <div class="mdc-checkbox__mixedmark"></div>
+                                    </div>
+                                </div>
+                                <span class="mdc-typography--body1">со ст.30</span>
+                                <div class="mdc-checkbox">
+                                    <input type="checkbox" class="mdc-checkbox__native-control">
+                                    <div class="mdc-checkbox__background">
+                                        <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                                            <path class="mdc-checkbox__checkmark-path" fill="none" stroke="white" d="M1.73,12.91 8.1,19.28 22.79,4.59"></path>
+                                        </svg>
+                                        <div class="mdc-checkbox__mixedmark"></div>
+                                    </div>
+                                </div>
+                                <span class="mdc-typography--body1">без ст.30</span>
+                            </div>
+                        </div>
+                        <div class="mdc-form-field no-input">
+                            <h2 class="block-header mdc-typography--subtitle1">ПАО в силу названия</h2>
+                            {{forms.1.pao_v_silu_nazvaniya_st30}}
+                            {{forms.1.pao_v_silu_nazvaniya_bez_st30}}
+                            <div class="custom-checkbox-field custom-text-field-with-icon">
+                                <div class="mdc-checkbox">
+                                    <input type="checkbox" class="mdc-checkbox__native-control">
+                                    <div class="mdc-checkbox__background">
+                                        <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                                            <path class="mdc-checkbox__checkmark-path" fill="none" stroke="white" d="M1.73,12.91 8.1,19.28 22.79,4.59"></path>
+                                        </svg>
+                                        <div class="mdc-checkbox__mixedmark"></div>
+                                    </div>
+                                </div>
+                                <span class="mdc-typography--body1">со ст.30</span>
+                                <div class="mdc-checkbox">
+                                    <input type="checkbox" class="mdc-checkbox__native-control">
+                                    <div class="mdc-checkbox__background">
+                                        <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                                            <path class="mdc-checkbox__checkmark-path" fill="none" stroke="white" d="M1.73,12.91 8.1,19.28 22.79,4.59"></path>
+                                        </svg>
+                                        <div class="mdc-checkbox__mixedmark"></div>
+                                    </div>
+                                </div>
+                                <span class="mdc-typography--body1">без ст.30</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card--content-block mdc-layout-grid__cell 
+                                mdc-layout-grid__cell--span-6 mdc-elevation--z1" style ="padding-bottom: 8px;">
+                        <div class="mdc-form-field">
+                            <h2 class="block-header mdc-typography--subtitle1">
+                                НАО осуществившее (осуществляющее) публичное размещение облигаций или иных ценных бумаг
+                            </h2>
+                            <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                {{forms.1.nao_osuchestvivshee_osuchestvlyayuschee_publichnoe_razmechenie_obligaciy_ili_inyh_cennyh_bumag}}
+                                <div class="mdc-line-ripple"></div>
+                            </div>
+                        </div>
+                        <div class="with-sub">
+                            <div class="card--content-subblock mdc-form-field no-input">
+                                <h2 class="block-header mdc-typography--subtitle1">НАО со ст.30</h2>
+                                {{forms.1.nao_so_st30}}
+                                <div class="custom-checkbox-field custom-text-field-with-icon">
+                                    <div class="mdc-checkbox">
+                                        <input type="checkbox" class="mdc-checkbox__native-control">
+                                        <div class="mdc-checkbox__background">
+                                            <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                                                <path class="mdc-checkbox__checkmark-path" fill="none" stroke="white" d="M1.73,12.91 8.1,19.28 22.79,4.59"></path>
+                                            </svg>
+                                            <div class="mdc-checkbox__mixedmark"></div>
+                                        </div>
+                                    </div>
+                                    <span class="mdc-typography--body1">Указать</span>
+                                </div>
+                            </div>
+                            <div class="card--content-subblock mdc-form-field no-input">
+                                <h2 class="block-header mdc-typography--subtitle1">НАО без ст.30</h2>
+                                {{forms.1.nao_bez_st30}}
+                                <div class="custom-checkbox-field custom-text-field-with-icon">
+                                    <div class="mdc-checkbox">
+                                        <input type="checkbox" class="mdc-checkbox__native-control">
+                                        <div class="mdc-checkbox__background">
+                                            <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                                                <path class="mdc-checkbox__checkmark-path" fill="none" stroke="white" d="M1.73,12.91 8.1,19.28 22.79,4.59"></path>
+                                            </svg>
+                                            <div class="mdc-checkbox__mixedmark"></div>
+                                        </div>
+                                    </div>
+                                    <span class="mdc-typography--body1">Указать</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card--content-block mdc-layout-grid__cell mdc-layout-grid__cell--span-5 mdc-elevation--z1">
+                        <div class="mdc-form-field no-input">
+                            <h2 class="block-header mdc-typography--subtitle1">Освобождены от раскрытия</h2>
+                            {{forms.1.osvobozhdeny_ot_raskrytiya}}
+                            <div class="custom-choice-field mdc-chip-set mdc-chip-set--choice">
+                                <div class="mdc-chip" tabindex="0">
+                                    <div class="mdc-chip__text">Да</div>
+                                </div>
+                                <div class="mdc-chip" tabindex="0">
+                                    <div class="mdc-chip__text">Нет</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="with-sub">
+                            <div class="mdc-form-field card--content-subblock">
+                                <h2 class="block-header mdc-typography--subtitle1">Номер решения</h2>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.1.nomer_resheniya_ob_osvobozhdenii}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                            <div class="mdc-form-field card--content-subblock">
+                                <h2 class="block-header mdc-typography--subtitle1">Дата решения</h2>
+                                <div class="custom-text-field-with-icon">
+                                    <i class="custom-text-field-icon-heading mdc-icon-toggle material-icons" role="button" tabindex="0">
+                                        event
+                                    </i>
+                                    <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                        {{forms.1.data_resheniya_ob_osvobozhdenii}}
+                                        <div class="mdc-line-ripple"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card--content-block mdc-layout-grid__cell mdc-layout-grid__cell--span-5 mdc-elevation--z1">
+                        <div class="mdc-form-field no-input">
+                            <h2 class="block-header mdc-typography--subtitle1">Отказ в освобождении от раскрытия</h2>
+                            {{forms.1.otkaz_v_osvobozhdenii_ot_raskritiya}}
+                            <div class="custom-checkbox-field custom-text-field-with-icon">
+                                <div class="mdc-checkbox">
+                                    <input type="checkbox" class="mdc-checkbox__native-control">
+                                    <div class="mdc-checkbox__background">
+                                        <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                                            <path class="mdc-checkbox__checkmark-path" fill="none" stroke="white" d="M1.73,12.91 8.1,19.28 22.79,4.59"></path>
+                                        </svg>
+                                        <div class="mdc-checkbox__mixedmark"></div>
+                                    </div>
+                                </div>
+                                <span class="mdc-typography--body1">Указать</span>
+                            </div>
+                        </div>
+                        <div class="with-sub">
+                            <div class="mdc-form-field card--content-subblock">
+                                <h2 class="block-header mdc-typography--subtitle1">Номер отказа</h2>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.1.nomer_otkaza_v_osvobozhdenii_ot_raskritiya}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                            <div class="mdc-form-field card--content-subblock">
+                                <h2 class="block-header mdc-typography--subtitle1">Дата отказа</h2>
+                                <div class="custom-text-field-with-icon">
+                                    <i class="custom-text-field-icon-heading mdc-icon-toggle material-icons" role="button" tabindex="0">
+                                        event
+                                    </i>
+                                    <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                        {{forms.1.data_otkaza_v_osvobozhdenii_ot_raskritiya}}
+                                        <div class="mdc-line-ripple"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card--content-block mdc-layout-grid__cell mdc-layout-grid__cell--span-3 mdc-elevation--z1">
+                        <div class="mdc-form-field">
+                            <h2 class="block-header mdc-typography--subtitle1">Проверка раскрытия</h2>
+                            <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                {{forms.1.proverka_raskritiya}}
+                                <div class="mdc-line-ripple"></div>
+                            </div>
+                        </div>
+                        <div class="mdc-form-field">
+                            <h2 class="block-header mdc-typography--subtitle1">Дата проверки</h2>
+                            <div class="custom-text-field-with-icon">
+                                <i class="custom-text-field-icon-heading mdc-icon-toggle material-icons" role="button" tabindex="0">
+                                    event
+                                </i>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.1.data_proverki}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card--content-block with-sub mdc-layout-grid__cell mdc-layout-grid__cell--span-7 mdc-elevation--z1">
+                        <div class="card--content-subblock">
+                            <div class="mdc-form-field">
+                                <h2 class="block-header mdc-typography--subtitle1">Номер запроса по нераскрытию информации</h2>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.1.nomer_zaprosa_po_neraskritiyu_informacii}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                            <div class="mdc-form-field">
+                                <h2 class="block-header mdc-typography--subtitle1">Дата запроса</h2>
+                                <div class="custom-field-shrink-width custom-text-field-with-icon">
+                                    <i class="custom-text-field-icon-heading mdc-icon-toggle material-icons" role="button" tabindex="0">
+                                        event
+                                    </i>
+                                    <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                        {{forms.1.data_zaprosa_po_neraskritiyu_informacii}}
+                                        <div class="mdc-line-ripple"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card--content-subblock">
+                            <div class="mdc-form-field">
+                                <h2 class="block-header mdc-typography--subtitle1">Номер предписания по нераскрытию информации</h2>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.1.nomer_predpisaniya_po_neraskritiyu_informacii}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                            <div class="mdc-form-field">
+                                <h2 class="block-header mdc-typography--subtitle1">Дата предписания</h2>
+                                <div class="custom-field-shrink-width custom-text-field-with-icon">
+                                    <i class="custom-text-field-icon-heading mdc-icon-toggle material-icons" role="button" tabindex="0">
+                                        event
+                                    </i>
+                                    <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                        {{forms.1.data_predpisaniya_po_neraskritiyu_informacii}}
+                                        <div class="mdc-line-ripple"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="card--content-block mdc-layout-grid__cell mdc-layout-grid__cell--span-4 mdc-elevation--z1">
+                        <div class="mdc-form-field">
+                            <h2 class="block-header mdc-typography--subtitle1">
+                                Номер предписания о представлении документов раскрытие
+                            </h2>
+                            <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                {# {{forms.1.}} #}
+                                <div class="mdc-line-ripple"></div>
+                            </div>
+                        </div>
+                        <div class="date-lawyers mdc-form-field">
+                            <h2 class="block-header mdc-typography--subtitle1">Дата предписания</h2>
+                            <div class="custom-text-field-with-icon">
+                                <i class="custom-text-field-icon-heading mdc-icon-toggle material-icons" role="button" tabindex="0">
+                                    event
+                                </i>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {# {{forms.1.}} #}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="card--content-block with-sub mdc-layout-grid__cell mdc-layout-grid__cell--span-8 mdc-elevation--z1">
+                        <div class="card--content-subblock">
+                            <div class="mdc-form-field">
+                                <h2 class="block-header mdc-typography--subtitle1">
+                                    Номер запроса о результатах проведения торгов в обществе
+                                </h2>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.1.nomer_zaprosa_o_rezultatah_provedeniya_torgov_v_obchestve}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                            <div class="mdc-form-field">
+                                <h2 class="block-header mdc-typography--subtitle1">Дата запроса</h2>
+                                <div class="custom-field-shrink-width custom-text-field-with-icon">
+                                    <i class="custom-text-field-icon-heading mdc-icon-toggle material-icons" role="button" tabindex="0">
+                                        event
+                                    </i>
+                                    <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                        {{forms.1.data_zaprosa_o_rezultatah_provedeniya_torgov_v_obchestve}}
+                                        <div class="mdc-line-ripple"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card--content-subblock">
+                            <div class="mdc-form-field">
+                                <h2 class="block-header mdc-typography--subtitle1">
+                                    Номер ответа на запрос о результатах проведения торгов в обществе
+                                </h2>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.1.nomer_otveta_na_zaprosa_o_rezultatah_provedeniya_torgov_v_obchestve}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                            <div class="mdc-form-field">
+                                <h2 class="block-header mdc-typography--subtitle1">Дата ответа</h2>
+                                <div class="custom-field-shrink-width custom-text-field-with-icon">
+                                    <i class="custom-text-field-icon-heading mdc-icon-toggle material-icons" role="button" tabindex="0">
+                                        event
+                                    </i>
+                                    <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                        {{forms.1.data_otveta_na_zaprosa_o_rezultatah_provedeniya_torgov_v_obchestve}}
+                                        <div class="mdc-line-ripple"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card--content-block mdc-layout-grid__cell mdc-layout-grid__cell--span-4 mdc-elevation--z1">
+                        <div class="mdc-form-field no-input">
+                            <h2 class="block-header mdc-typography--subtitle1">Отказ в регистрации выпуска</h2>
+                            {{forms.1.otkaz_v_registracii_vipuska}}
+                            <div class="custom-checkbox-field custom-text-field-with-icon">
+                                <div class="mdc-checkbox">
+                                    <input type="checkbox" class="mdc-checkbox__native-control">
+                                    <div class="mdc-checkbox__background">
+                                        <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                                            <path class="mdc-checkbox__checkmark-path" fill="none" stroke="white" d="M1.73,12.91 8.1,19.28 22.79,4.59"></path>
+                                        </svg>
+                                        <div class="mdc-checkbox__mixedmark"></div>
+                                    </div>
+                                </div>
+                                <span class="mdc-typography--body1">Указать</span>
+                            </div>
+                        </div>
+                        <div class="mdc-form-field">
+                            <h2 class="block-header mdc-typography--subtitle1">Дата определения статуса</h2>
+                            <div class="custom-field-shrink-width custom-text-field-with-icon">
+                                <i class="custom-text-field-icon-heading mdc-icon-toggle material-icons" role="button" tabindex="0">
+                                    event
+                                </i>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.1.data_opredelenia_statusa}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section2 mdc-layout-grid__inner slide-intermediate right-curtain">
+                    <div class="card--content-block mdc-layout-grid__cell mdc-elevation--z1 mdc-layout-grid__cell--span-5">
+                        <div class="mdc-form-field">
+                            <h2 class="block-header mdc-typography--subtitle1">Статья КоАП</h2>
+                            <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                {{forms.2.statya_koap}}
+                                <div class="mdc-line-ripple"></div>
+                            </div>
+                        </div>
+                        <div class="with-sub">
+                            <div class="mdc-form-field card--content-subblock">
+                                <h2 class="block-header mdc-typography--subtitle1">Номер протокола</h2>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.2.nomer_protokola}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                            <div class="mdc-form-field card--content-subblock">
+                                <h2 class="block-header mdc-typography--subtitle1">Дата протокола</h2>
+                                <div class="custom-text-field-with-icon">
+                                    <i class="custom-text-field-icon-heading mdc-icon-toggle material-icons" role="button" tabindex="0">
+                                        event
+                                    </i>
+                                    <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                        {{forms.2.data_protokola}}
+                                        <div class="mdc-line-ripple"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card--content-block with-sub mdc-layout-grid__cell mdc-layout-grid__cell--span-6 mdc-elevation--z1">
+                        <div class="card--content-subblock">
+                            <div class="mdc-form-field">
+                                <h2 class="block-header mdc-typography--subtitle1">Номер постановления</h2>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.2.nomer_postanovleniya}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                            <div class="mdc-form-field">
+                                <h2 class="block-header mdc-typography--subtitle1">Дата постановления</h2>
+                                <div class="custom-text-field-with-icon">
+                                    <i class="custom-text-field-icon-heading mdc-icon-toggle material-icons" role="button" tabindex="0">
+                                        event
+                                    </i>
+                                    <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                        {{forms.2.data_postanovleniya}}
+                                        <div class="mdc-line-ripple"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card--content-subblock">
+                            <div class="mdc-form-field">
+                                <h2 class="block-header mdc-typography--subtitle1">Результат</h2>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.2.resultat}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                            <div class="mdc-form-field">
+                                <h2 class="block-header mdc-typography--subtitle1">Размер штрафа</h2>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.2.razmer_shtrafa}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card--content-block mdc-layout-grid__cell mdc-layout-grid__cell--span-4 mdc-elevation--z1">
+                        <div class="mdc-form-field">
+                            <h2 class="block-header mdc-typography--subtitle1">Номер заключения юристам</h2>
+                            <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                {{forms.2.nomer_zaclucheniya_uristam}}
+                                <div class="mdc-line-ripple"></div>
+                            </div>
+                        </div>
+                        <div class="mdc-form-field">
+                            <h2 class="block-header mdc-typography--subtitle1">Дата заключения юристам</h2>
+                            <div class="custom-field-shrink-width custom-text-field-with-icon">
+                                <i class="custom-text-field-icon-heading mdc-icon-toggle material-icons" role="button" tabindex="0">
+                                    event
+                                </i>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.2.data_zaclucheniya_uristam}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section3 mdc-layout-grid__inner slide-intermediate right-curtain">
+                    <div class="card--content-block mdc-layout-grid__cell mdc-elevation--z1 mdc-layout-grid__cell--span-5">
+                        <div class="mdc-form-field">
+                            <h2 class="block-header mdc-typography--subtitle1">ФНС</h2>
+                            <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                {{forms.3.fns}}
+                                <div class="mdc-line-ripple"></div>
+                            </div>
+                        </div>
+                        <div class="with-sub">
+                            <div class="mdc-form-field card--content-subblock">
+                                <h2 class="block-header mdc-typography--subtitle1">Номер письма в ФНС</h2>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.3.nomer_pisma_v_fns}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                            <div class="mdc-form-field card--content-subblock">
+                                <h2 class="block-header mdc-typography--subtitle1">Дата письма в ФНС</h2>
+                                <div class="custom-text-field-with-icon">
+                                    <i class="custom-text-field-icon-heading mdc-icon-toggle material-icons" role="button" tabindex="0">
+                                        event
+                                    </i>
+                                    <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                        {{forms.3.data_pisma_v_fns}}
+                                        <div class="mdc-line-ripple"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card--content-block mdc-layout-grid__cell mdc-elevation--z1 mdc-layout-grid__cell--span-5">
+                        <div class="mdc-form-field">
+                            <h2 class="block-header mdc-typography--subtitle1">Взаимодействие с ФНС на ежеквартальной основе</h2>
+                            <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                {{forms.3.vzaimodeystvie_s_fns_na_ezhekvartalnoi_osnove}}
+                                <div class="mdc-line-ripple"></div>
+                            </div>
+                        </div>
+                        <div class="with-sub">
+                            <div class="mdc-form-field card--content-subblock">
+                                <h2 class="block-header mdc-typography--subtitle1">Номер письма</h2>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.3.vzaimodeystvie_s_fns_na_ezhekvartalnoi_osnove_nomer_pisma}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                            <div class="mdc-form-field card--content-subblock">
+                                <h2 class="block-header mdc-typography--subtitle1">Дата письма</h2>
+                                <div class="custom-text-field-with-icon">
+                                    <i class="custom-text-field-icon-heading mdc-icon-toggle material-icons" role="button" tabindex="0">
+                                        event
+                                    </i>
+                                    <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                        {{forms.3.vzaimodeystvie_s_fns_na_ezhekvartalnoi_osnove_data_pisma}}
+                                        <div class="mdc-line-ripple"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card--content-block mdc-layout-grid__cell mdc-layout-grid__cell--span-4 mdc-elevation--z1">
+                        <div class="mdc-form-field">
+                            <h2 class="block-header mdc-typography--subtitle1">Ответ ФНС об адресе</h2>
+                            <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                {{forms.3.otvet_fns_ob_adrese}}
+                                <div class="mdc-line-ripple"></div>
+                            </div>
+                        </div>
+                        <div class="mdc-form-field no-input">
+                            <h2 class="block-header mdc-typography--subtitle1">Сведения об адресе недостоверны</h2>
+                            {{forms.3.svedeniya_ob_adrese_ne_dostoverny}}
+                            <div class="custom-checkbox-field custom-text-field-with-icon">
+                                <div class="mdc-checkbox">
+                                    <input type="checkbox" class="mdc-checkbox__native-control">
+                                    <div class="mdc-checkbox__background">
+                                        <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                                            <path class="mdc-checkbox__checkmark-path" fill="none" stroke="white" d="M1.73,12.91 8.1,19.28 22.79,4.59"></path>
+                                        </svg>
+                                        <div class="mdc-checkbox__mixedmark"></div>
+                                    </div>
+                                </div>
+                                <span class="mdc-typography--body1">Указать</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card--content-block mdc-layout-grid__cell mdc-elevation--z1 mdc-layout-grid__cell--span-6">
+                        <div class="with-sub">
+                            <div class="mdc-form-field card--content-subblock">
+                                <h2 class="block-header mdc-typography--subtitle1">Информация о получении ответа от ФНС</h2>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.3.informaciya_o_poluchenii_otveta_ot_fns}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                            <div class="mdc-form-field card--content-subblock nomer-otvet-fns">
+                                <h2 class="block-header mdc-typography--subtitle1">Входящий номер</h2>
+                                <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                    {{forms.3.vh_nomer_otveta}}
+                                    <div class="mdc-line-ripple"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mdc-form-field">
+                            <h2 class="block-header mdc-typography--subtitle1">Содержание ответа</h2>
+                            <div class="mdc-text-field mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+                                {{forms.3.soderzhanie_otveta}}
+                                <div class="mdc-line-ripple"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <button id="edit_it" class="mdc-fab material-icons app-fab--absolute md-30"
+				aria-label="Edit mode" data-mdc-auto-init="MDCRipple" onclick="edit()">
+			<span class="mdc-fab__icon">edit</span>
+        </button>
+        
+    </main>
+
+    <div class="checkout">
+        <p class="mdc-typography--headline6">Вы в режиме редактирования</p>
+        <button type="button" id="submit-it" class="mdc-button mdc-button--outlined" data-mdc-auto-init="MDCRipple">
+            Сохранить
+        </button>
+    </div>
+
+{% include 'dialogs.html' %}
+
+    <!-- Если разместить js-скрипты в конце будет вроде как лучше -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery-ui/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'new/js/material-components-web.min.js' %}"></script>
+    <script src="{% static 'new/js/datepicker.js' %}"></script>
+    <script src="{% static 'new/js/datepicker.ru-RU.js' %}"></script>
+	<script src="{% static 'new/js/general.js' %}"></script>
+    <script src="{% static 'new/js/card.js' %}"></script>
+</body>
+
+</html>

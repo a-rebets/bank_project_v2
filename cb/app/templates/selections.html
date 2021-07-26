@@ -1,0 +1,561 @@
+{% load staticfiles %}
+{% include 'navbar.html' %}
+{% load bootstrap %}
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
+
+	<title>Выборка</title>
+	<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+	<link href="{% static 'css/ie10-viewport-bug-workaround.css' %}" rel="stylesheet">
+	<link href="{% static 'css/navbar-fixed-top.css' %}" rel="stylesheet">
+	<link href="{% static 'js/jquery-ui/jquery-ui.min.css' %}" rel="stylesheet">
+	<link href="{% static 'js/jquery-ui/jquery-ui.theme.min.css' %}" rel="stylesheet">
+	<link href="{% static 'js/jquery-ui/jquery-ui.structure.min.css' %}" rel="stylesheet">
+	<link href="{% static 'js/nprogress/nprogress.css' %}" rel="stylesheet">
+	<link href="{% static 'css/custom.css' %}" rel="stylesheet">
+
+	<script src="{% static 'js/ie-emulation-modes-warning.js' %}"></script>
+
+ 	<script type="text/javascript" src="http://yastatic.net/jquery/2.1.3/jquery.min.js"></script>
+
+
+</head>
+<body>
+
+	<div class="container">
+		<div class="jumbotron">
+			<div class="title">Выборка</div><br>
+				<form method="post" action="" class="form-horizontal">
+					{% csrf_token %}
+				    
+
+				<div class="1  " >
+
+				    <div class="col-sm-3 panel panel-default col-sm-offset-0" style="height: 35px">
+					{{form.naimenovanie|bootstrap}}
+				    </div>
+
+					<div class="col-sm-3 panel panel-default col-sm-offset-0" style="height: 35px">
+					{{form.inn|bootstrap}}
+				    </div>
+
+				    <div class="col-sm-3 panel panel-default col-sm-offset-0" style="height: 35px">
+					{{form.ogrn|bootstrap}}
+				    </div>
+
+				    <div class="col-sm-3 panel panel-default col-sm-offset-0" style="height: 35px">
+					{{form.data_registracii|bootstrap}}
+				    </div>
+
+				</div>
+
+				<hr>
+
+				<div class="2 " title="Карточка" ">
+
+				    <h4>Карточка:</h4>	
+
+
+				    <div class="col-sm-3 well  col-sm-offset-0 " style="height: 350px">
+				    {{form.opf|bootstrap}}
+				        <div class="dropdown">
+      						<a href="#" data-toggle="dropdown" class="dropdown-toggle">
+				        Фильтры
+				        <b class="caret"></b>
+				      </a>
+				      <ul class="dropdown-menu">
+				        <li style="margin-left: 50px;">{{ form_filter_opf.ao|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_opf.aozt|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_opf.aoot|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_opf.zao|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_opf.nao|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_opf.oao|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_opf.pao|bootstrap }}</li>
+				        <li class="divider"></li>
+				      </ul>
+				    </div>
+
+
+								    <br>
+				    {{form.cod_emitenta|bootstrap}}
+				    <br>
+				    {{form.ustavnoy_capital|bootstrap}}
+				    <br><br>
+
+				    {{form.kolichestvo_licevyh_schetov_v_reestre|bootstrap}}
+				    <div class="dropdown">
+      						<a href="#" data-toggle="dropdown" class="dropdown-toggle">
+				        Фильтры
+				        <b class="caret"></b>
+				      </a>
+				      <ul class="dropdown-menu">
+				        <li style="margin-left: 50px;">{{ form_filter_kolichestvo_schetov.bolshe_50|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_kolichestvo_schetov.menshe_50|bootstrap }}</li>
+				        <li class="divider"></li>
+				      </ul>
+				    </div>
+				    </div>
+
+				    <div class="col-sm-3 well col-sm-offset-0" style="height: 350px" >
+				    {{form.kolichestvo_nominalnyh_derzhateley_v_reestre|bootstrap}}
+				    {{form.cvedeniya_ob_otritii_scheta_nominalnogo_derzhatelya_centralnogo_depozitoria|bootstrap}}
+				    {{form.region|bootstrap}}
+				    <div class="dropdown">
+      						<a href="#" data-toggle="dropdown" class="dropdown-toggle">
+				        Фильтры
+				        <b class="caret"></b>
+				      </a>
+				      <ul class="dropdown-menu">
+				        <li style="margin-left: 50px;">{{ form_filter_region.moskva|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_region.moskovskaya|bootstrap }}</li>
+				        <li class="divider"></li>
+				      </ul>
+				    </div>
+				    {{form.adres|bootstrap}}
+				    <br>
+				    </div>
+
+				    <div class="col-sm-3  well col-sm-offset-0" style="height: 350px"  >
+				    {{form.edinolichny_ispolnitelny_organ|bootstrap}}
+				    {{form.contactny_dannye|bootstrap}}
+				    <br><br>
+				    {{form.status|bootstrap}}
+				    <div class="dropdown">
+      						<a href="#" data-toggle="dropdown" class="dropdown-toggle">
+				        Фильтры
+				        <b class="caret"></b>
+				      </a>
+				      <ul class="dropdown-menu">
+				        <li style="margin-left: 50px;">{{ form_filter_status.bankrotstvo|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_status.deistvyushaya|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_status.nahoditca_v_processe_reorganizacii_v_forme_videlenya|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_status.nahoditca_v_processe_reorganizacii_v_forme_videlenya_osyshestvlyaemoe_odnovremenno_s_videleniem|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_status.nahoditca_v_processe_reorganizacii_v_forme_preobrazovanya|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_status.nahoditca_v_processe_reorganizacii_v_forme_prisoedinenya_k_drygomy_ul|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_status.nahoditca_v_processe_reorganizacii_v_forme_prisoedinenya_k_nemy_drygih_ul|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_status.nahoditca_v_processe_reorganizacii_v_forme_prisoedinenya_osychestvlyaemoy_odnovremenno_s_videleniem|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_status.nahoditca_v_processe_reorganizacii_v_forme_razdelenya_osychestvlyaemoy_odnovremenno_s_prisoedineniem|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_status.nahoditca_v_processe_reorganizacii_v_forme_sliyaniya|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_status.nahoditca_v_processe_reorganizacii_v_forme_razdelenya|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_status.nahoditca_v_stadii_likvidacii|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_status.prinyato_reshenie_o_predostoyashem_iskluchenii_nedeystvyushego_ul_iz_egrul|bootstrap }}</li>
+				       
+				        <li class="divider"></li>
+				      </ul>
+				    </div>
+				    <br>
+				    {{form.dvizhenie_denezhnyh_sredstv|bootstrap}}
+				    <div class="dropdown">
+      						<a href="#" data-toggle="dropdown" class="dropdown-toggle">
+				        Фильтры
+				        <b class="caret"></b>
+				      </a>
+				      <ul class="dropdown-menu">
+				        <li style="margin-left: 50px;">{{ form_filter_dvizhenie_denezhnyh_sredstv.da|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_dvizhenie_denezhnyh_sredstv.net|bootstrap }}</li>
+				       
+				        <li class="divider"></li>
+				      </ul>
+				    </div>
+				    </div>
+
+				    <div class="col-sm-3 well col-sm-offset-0" style="height: 350px" >
+				    {{form.otchetnost|bootstrap}}
+				    <div class="dropdown">
+      						<a href="#" data-toggle="dropdown" class="dropdown-toggle">
+				        Фильтры
+				        <b class="caret"></b>
+				      </a>
+				      <ul class="dropdown-menu">
+				        <li style="margin-left: 50px;">{{ form_filter_otchetnost.nepustaia|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_otchetnost.pustaia|bootstrap }}</li>
+				       
+				        <li class="divider"></li>
+				      </ul>
+				    </div>
+				    <br>
+				    {{ form.data_posledney_operacii|bootstrap }}
+				    {{form.zadolzhennost_pered_fns|bootstrap}}
+				    <div class="dropdown">
+      						<a href="#" data-toggle="dropdown" class="dropdown-toggle">
+				        Фильтры
+				        <b class="caret"></b>
+				      </a>
+				    <ul class="dropdown-menu">
+				        <li style="margin-left: 50px;">{{ form_filter_zadolzhennost_pered_fns.nepustaia|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_zadolzhennost_pered_fns.pustaia|bootstrap }}</li>
+				       
+				        <li class="divider"></li>
+				      </ul>
+				    </div>
+				    <br>
+				    {{form.kpp|bootstrap}}
+				    {{form.vid_deyatelnosti|bootstrap}}
+
+				    <br><br><br><br>
+				    <br><br><br><br>
+				    </div>
+
+				</div>
+
+			<hr>
+
+                <div class="3" title="Корп. контроль">
+
+                   <h4>Корп. контроль:</h4>	
+
+
+				    <div class="col-sm-3 well col-sm-offset-0"  style="height: 420px">
+				    {{form.registrator|bootstrap}}
+				    <div class="dropdown">
+      						<a href="#" data-toggle="dropdown" class="dropdown-toggle">
+				        Фильтры
+				        <b class="caret"></b>
+				      </a>
+				      <ul class="dropdown-menu">
+				        <li style="margin-left: 50px;">{{ form_filter_registrator.da|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_registrator.net|bootstrap }}</li>
+						  <li style="margin-left: 50px;">{{ form_filter_registrator.egrul|bootstrap }}</li>
+						  <li style="margin-left: 50px;">{{ form_filter_registrator.chranenie_reestra|bootstrap }}</li>
+
+				        <li class="divider"></li>
+				      </ul>
+				    </div>
+				    {{form.naimenovanie_registratora|bootstrap}}
+				    {{form.data_predpisanya_o_predstavlenii_documentov|bootstrap}}
+				    <br>
+				    {{form.nomer_predpisanya_o_predstavlenii_documentov|bootstrap}}
+				    <br>
+				    {{form.data_zaprosa_po_reestru|bootstrap}}
+				    
+				    </div>
+
+
+				    <div class="col-sm-3 well col-sm-offset-0"  style="height: 420px">
+				    {{form.nomer_zaprosa_po_reestru|bootstrap}}
+				    {{form.data_predpisanya_po_reestru|bootstrap}}
+				    {{form.nomer_predpisaniya_po_reestru|bootstrap}}
+
+				    {{form.proverky_gosa_po_raskritiyu|bootstrap}}
+				    <div class="dropdown">
+      						<a href="#" data-toggle="dropdown" class="dropdown-toggle">
+				        Фильтры
+				        <b class="caret"></b>
+				      </a>
+				      <ul class="dropdown-menu">
+				        <li style="margin-left: 50px;">{{ form_filter_proverka_gosa_po_raskratiu.maxi|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_proverka_gosa_po_raskratiu.mini|bootstrap }}</li>
+						  <li style="margin-left: 50px;">{{ form_filter_proverka_gosa_po_raskratiu.avr|bootstrap }}</li>
+						  <li style="margin-left: 50px;">{{ form_filter_proverka_gosa_po_raskratiu.pusto|bootstrap }}</li>
+
+				        <li class="divider"></li>
+				      </ul>
+				    </div>
+				    {{form.proverky_gosa_po_zaprosu|bootstrap}}
+				    <div class="dropdown">
+      						<a href="#" data-toggle="dropdown" class="dropdown-toggle">
+				        Фильтры
+				        <b class="caret"></b>
+				      </a>
+				      <ul class="dropdown-menu">
+				        <li style="margin-left: 50px;">{{ form_filter_proverky_gosa_po_zaprosu.akt|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_proverky_gosa_po_zaprosu.k_proverke|bootstrap }}</li>
+						  <li style="margin-left: 50px;">{{ form_filter_proverky_gosa_po_zaprosu.pusto|bootstrap }}</li>
+						  
+				        <li class="divider"></li>
+				      </ul>
+				    </div>
+				    {{form.data_provedeniya_gosa|bootstrap}}
+				    <br>
+				    
+				    </div>
+
+				    <div class="col-sm-3 well col-sm-offset-0"  style="height: 420px">
+				    {{form.data_zaprosa_po_gosa|bootstrap}}
+				    {{form.nomer_zaprosa_po_gosa|bootstrap}}
+				    
+				    {{form.proverka_1_vipusk|bootstrap}}
+				    <br>
+				    {{form.data_predpisaniya_po_1_vypusku|bootstrap}}
+				    {{form.nomer_predpisaniya_po_1_vypusku|bootstrap}}
+				    {{form.nrd|bootstrap}}
+				     <div class="dropdown">
+      						<a href="#" data-toggle="dropdown" class="dropdown-toggle">
+				        Фильтры
+				        <b class="caret"></b>
+				      </a>
+				      <ul class="dropdown-menu">
+				        <li style="margin-left: 50px;">{{ form_filter_nrd.da|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_nrd.pusto|bootstrap }}</li>
+						  
+				        <li class="divider"></li>
+				      </ul>
+				    </div>
+				    
+				    </div>
+
+				    <div class="col-sm-3 well col-sm-offset-0"  style="height: 420px">
+				    {{form.nomer_predpisaniya_po_1_vypusku|bootstrap}}
+				    {{form.proverki_nrd|bootstrap}}
+				    <div class="dropdown">
+      						<a href="#" data-toggle="dropdown" class="dropdown-toggle">
+				        Фильтры
+				        <b class="caret"></b>
+				      </a>
+				      <ul class="dropdown-menu">
+				        <li style="margin-left: 50px;">{{ form_filter_proverki_nrd.da|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_proverki_nrd.net_scheta|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_proverki_nrd.pusto|bootstrap }}</li>
+						  
+				        <li class="divider"></li>
+				      </ul>
+				    </div>
+				    {{form.oao_na_22_06_2015|bootstrap}}
+				    <div class="dropdown">
+      						<a href="#" data-toggle="dropdown" class="dropdown-toggle">
+				        Фильтры
+				        <b class="caret"></b>
+				      </a>
+				      <ul class="dropdown-menu">
+				        <li style="margin-left: 50px;">{{ form_filter_oao_na_22062015.da|bootstrap }}</li>
+				        <li style="margin-left: 50px;">{{ form_filter_oao_na_22062015.pusto|bootstrap }}</li>
+				       
+						  
+				        <li class="divider"></li>
+				      </ul>
+				    </div>
+				    {{form.data_proverki_gosa|bootstrap}}
+				    {{form.data_predpisanya_o_predstavlenii_documentov_gosa|bootstrap}}
+				    {{form.nomer_predpisanya_o_predstavlenii_documentov_gosa|bootstrap}}
+				    <br><br><br><br>
+				    <br><br><br><br>
+
+				    </div>
+				    
+				   
+				</div>  
+
+				<hr>
+
+				<div class="4" title="Раскрытие">
+
+
+				    <h4>Раскрытие:</h4>	
+
+				    <div class="col-sm-3 well col-sm-offset-0" style="height: 640px">
+				    {{form.pao_v_silu_priznakov_st30|bootstrap}}
+				    <br>
+				    {{form.pao_v_silu_priznakov_bez_st30|bootstrap}}
+				    <br>
+				    {{form.pao_v_silu_nazvaniya_st30|bootstrap}}
+				    <br>
+				    {{form.pao_v_silu_nazvaniya_bez_st30|bootstrap}}
+				    {{form.nao_so_st30|bootstrap}}
+				    <br>
+				    {{form.nao_osuchestvivshee_osuchestvlyayuschee_publichnoe_razmechenie_obligaciy_ili_inyh_cennyh_bumag|bootstrap}}
+				    {{form.nao_bez_st30|bootstrap}}
+				    <br><br>
+				    {{form.otkaz_v_registracii_vipuska|bootstrap}}
+				   
+				    </div>
+
+				    <div class="col-sm-3 well col-sm-offset-0"  style="height: 640px">
+				    {{form.osvobozhdeny_ot_raskrytiya|bootstrap}} <br>
+				    {{form.data_resheniya_ob_osvobozhdenii|bootstrap}}
+				    <br>
+				    {{form.nomer_resheniya_ob_osvobozhdenii|bootstrap}}
+				    <br>
+				    {{form.otkaz_v_osvobozhdenii_ot_raskritiya|bootstrap}}
+				    <br><br>
+				    {{form.data_otkaza_v_osvobozhdenii_ot_raskritiya|bootstrap}}
+				    <br><br>
+				    {{form.nomer_otkaza_v_osvobozhdenii_ot_raskritiya|bootstrap}}
+				    {{form.data_predpisanya_o_predstavlenii_documentov_raskritie|bootstrap}}
+				    </div>
+
+				    <div class="col-sm-3 well col-sm-offset-0"  style="height: 640px">
+				    {{form.proverka_raskritiya|bootstrap}}
+				    <br> <br>
+				    {{form.data_proverki|bootstrap}}
+				    <br> <br>
+				    {{form.data_zaprosa_po_neraskritiyu_informacii|bootstrap}}
+				    <br>
+				    {{form.nomer_zaprosa_po_neraskritiyu_informacii|bootstrap}}
+				    <br><br>
+				    {{form.data_predpisaniya_po_neraskritiyu_informacii|bootstrap}}
+				    <br><br><br>
+				    {{form.nomer_predpisaniya_po_neraskritiyu_informacii|bootstrap}}
+				    <br>
+				    {{form.nomer_predpisanya_o_predstavlenii_documentov_raskritie|bootstrap}}
+				    </div>
+
+				    <div class="col-sm-3 well col-sm-offset-0"  style="height: 640px">
+				    {{form.data_zaprosa_o_rezultatah_provedeniya_torgov_v_obchestve|bootstrap}}
+				    {{form.nomer_zaprosa_o_rezultatah_provedeniya_torgov_v_obchestve|bootstrap}}
+				    {{form.data_otveta_na_zaprosa_o_rezultatah_provedeniya_torgov_v_obchestve|bootstrap}}
+				    {{form.nomer_otveta_na_zaprosa_o_rezultatah_provedeniya_torgov_v_obchestve|bootstrap}}
+				    <br>
+				    {{form.vivod|bootstrap}}
+				    <br><br><br><br>
+				    {{form.raskritie|bootstrap}}
+				    <br><br>
+				    {{form.data_opredelenia_statusa|bootstrap}}
+				    <br><br><br><br>
+				    <br>
+				    </div>
+
+
+				</div>
+
+		<hr>
+
+
+				<div class="4" title="Административка">
+
+					<h4>Административка:</h4>	
+
+
+				  <div class="col-sm-3 well col-sm-offset-0" style="height: 160px">
+				    {{form.data_protokola|bootstrap}}
+				    {{form.nomer_protokola|bootstrap}}
+				    {{form.nomer_zaclucheniya_uristam|bootstrap}}
+				  </div>
+         
+
+				  <div class="col-sm-3 well col-sm-offset-0" style="height: 160px">
+				    {{form.statya_koap|bootstrap}}
+				    {{form.data_postanovleniya|bootstrap}}
+				  </div>
+
+				  <div class="col-sm-3  well col-sm-offset-0" style="height: 160px">
+				    {{form.nomer_postanovleniya|bootstrap}}
+				    {{form.resultat|bootstrap}}
+				  </div>
+
+				  <div class="col-sm-3 well col-sm-offset-0" style="height: 160px">
+				    {{form.razmer_shtrafa|bootstrap}}
+				    {{form.data_zaclucheniya_uristam|bootstrap}}
+				    <br><br><br><br>
+				  </div>
+
+				</div>
+
+		<hr>
+
+
+				<div class="4" title="Взаимодействие с гос. органами">
+
+
+					 <h4>Взаимодействие с гос. органами:</h4>
+
+
+					<div class="col-sm-3 well col-sm-offset-0" style="height: 200px" >
+       				    {{form.fns|bootstrap}}
+       				    <br>
+       				    {{form.data_pisma_v_fns|bootstrap}}
+       				    {{form.nomer_pisma_v_fns|bootstrap}}
+				    </div>
+
+				    <div class="col-sm-3  well col-sm-offset-0" style="height: 200px">
+				      {{form.informaciya_o_poluchenii_otveta_ot_fns|bootstrap}}
+				      {{form.vh_nomer_otveta|bootstrap}}
+				      {{form.soderzhanie_otveta|bootstrap}}
+				    </div>
+
+				    <div class="col-sm-3 well col-sm-offset-0" style="height: 200px">
+				      {{form.otvet_fns_ob_adrese|bootstrap}}
+				      {{form.vzaimodeystvie_s_fns_na_ezhekvartalnoi_osnove|bootstrap}}
+				      {{form.vzaimodeystvie_s_fns_na_ezhekvartalnoi_osnove_nomer_pisma|bootstrap}}
+				    </div>
+
+				    <div class="col-sm-3 well col-sm-offset-0" style="height: 200px">
+				    	{{form.vzaimodeystvie_s_fns_na_ezhekvartalnoi_osnove_data_pisma|bootstrap}}
+				    	{{form.svedeniya_ob_adrese_ne_dostoverny|bootstrap}}
+				      {{form.data_vneseniya_zapisi|bootstrap}}
+
+
+				      <br><br><br>
+				    </div>
+
+
+				</div>
+
+
+
+<br><br><br><br><br><br><br><br>
+<b>{{form.export|bootstrap}}</b>
+<br> <br>
+					<input class='btn btn-danger'  type="submit" style="width: -webkit-fill-available;" value="Поиск/Экспорт" />
+				</form>
+
+<!--{{a}}
+{{b}} -->
+
+		 </div>
+
+      </div>
+
+	</div> <!-- /container -->
+
+
+			<div class="table-block" style="position: relative;
+                                            overflow-x: auto;">
+
+				<table class='table'>
+				 	
+				<div class = "headerka">
+				 	<thead>
+							 <tr>
+								{% for h in a %}
+								  <th class="center-align">{{h}}</th>
+								{% endfor %}
+							 </tr>
+				 	</thead>
+				</div>
+
+				<div>
+		<!--<tr>
+		{% for h in table_headers %}
+		<th>{{ h }}</th>
+		{% endfor %}
+		</tr>
+	-->
+		{% for row in table_rows %}
+		<tr>
+		{% for k,v in row.items %}
+		<td>{{ v }}</td>
+		{% endfor %}
+		</tr>
+		{% endfor %}
+				     
+		
+
+            	</table>
+
+
+            </div>
+
+
+	<!-- Bootstrap core JavaScript
+	================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="{% static 'js/jquery.min.js' %}"></script>
+	<script src="{% static 'js/jquery-ui/jquery-ui.min.js' %}"></script>
+	<script src="{% static 'js/nprogress/nprogress.js' %}"></script>
+	<script src="{% static 'js/custom.js' %}"></script>
+	<script>window.jQuery || document.write('<script src="{% static 'js/jquery.min.js' %}"><\/script>')</script>
+	<script src="{% static 'js/bootstrap.min.js' %}"></script>
+	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+	<script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
+</body>
+</html>

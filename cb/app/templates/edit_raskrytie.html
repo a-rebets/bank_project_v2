@@ -1,0 +1,145 @@
+{% load staticfiles %}
+{% include 'navbar.html' %}
+{% load bootstrap %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<link rel="icon" href="../../favicon.ico">
+
+	<title>Раскрытие</title>
+	<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+	<link href="{% static 'css/ie10-viewport-bug-workaround.css' %}" rel="stylesheet">
+	<link href="{% static 'css/navbar-fixed-top.css' %}" rel="stylesheet">
+	<link href="{% static 'js/jquery-ui/jquery-ui.min.css' %}" rel="stylesheet">
+	<link href="{% static 'js/jquery-ui/jquery-ui.theme.min.css' %}" rel="stylesheet">
+	<link href="{% static 'js/jquery-ui/jquery-ui.structure.min.css' %}" rel="stylesheet">
+	<link href="{% static 'js/nprogress/nprogress.css' %}" rel="stylesheet">
+	<link href="{% static 'css/custom.css' %}" rel="stylesheet">
+
+	<script src="{% static 'js/ie-emulation-modes-warning.js' %}"></script>
+</head>
+<body>
+
+	<div class="container">
+		<div class="jumbotron" >
+			<nav class="navbar navbar-default" role="navigation">
+			  <div class="container-fluid">
+			 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			 <ul class="nav navbar-nav">
+			 <li><a href="{% url 'edit/kartochka_kompanii' id %}">Карточка компании</a></li>
+			 <li><a href="{% url 'edit/korp_kontrol' id %}">Корп контроль</a></li>
+			 <li class="active"><a href="{% url 'edit/raskrytie' id %}">Раскрытие</a></li>
+       <li><a href="{% url 'edit/administrativka' id %}">Административка</a></li>
+			 <li><a href="{% url 'edit/vzaimodeystvie' id %}">Взаимодествие с гос. органами</a></li>
+			 </ul>
+			 </div><!-- /.navbar-collapse -->
+			  </div><!-- /.container-fluid -->
+			</nav>
+      <div class="title" style="text-align: center; padding-bottom: 20px;">Раскрытие"{{ title }}"</div>
+
+<br> <br>
+      <div style="font-family: helvetica; font-weight: bold; text-align: left; font-size: 22px; color: #2e6da4;">Статус Акционерного Общества</div>
+      <br>
+      <div class="row">
+      	<form method="post" action="">
+      		{% csrf_token %}
+      		<div class="col-sm-6">
+      			{{ form.pao_v_silu_priznakov_st30|bootstrap }}
+            {{ form.pao_v_silu_priznakov_bez_st30|bootstrap }}
+      			{{ form.nao_so_st30|bootstrap }}
+      			{{ form.nao_bez_st30|bootstrap }}
+            {{ form.data_opredelenia_statusa|bootstrap }}
+      			{{ form.nomer_zaprosa_o_rezultatah_provedeniya_torgov_v_obchestve|bootstrap }}
+      			{{ form.nomer_otveta_na_zaprosa_o_rezultatah_provedeniya_torgov_v_obchestve|bootstrap }}
+      		</div>
+      		<div class="col-sm-6">
+      			{{ form.pao_v_silu_nazvaniya_st30|bootstrap }}
+            {{ form.pao_v_silu_nazvaniya_bez_st30|bootstrap }}
+      			{{ form.nao_osuchestvivshee_osuchestvlyayuschee_publichnoe_razmechenie_obligaciy_ili_inyh_cennyh_bumag|bootstrap }}
+      			{{ form.data_zaprosa_o_rezultatah_provedeniya_torgov_v_obchestve|bootstrap }}
+      			{{ form.data_otveta_na_zaprosa_o_rezultatah_provedeniya_torgov_v_obchestve|bootstrap }}
+      			{{ form.vivod|bootstrap }}
+
+      		</div>
+      		<input style="margin-top: 20px; margin-right: 900px;" class='btn btn-primary'  type="submit" value="Сохранить" />
+      	</form>
+
+<br> <br> 
+
+<div style="font-family: helvetica; font-weight: bold; text-align: left; font-size: 22px; color: #2e6da4;">Информация об освобождении</div>
+<br>
+<form method="post" action="">
+          {% csrf_token %}
+          <div class="col-sm-6">
+            {{ form.data_resheniya_ob_osvobozhdenii|bootstrap }}
+            {{ form.otkaz_v_osvobozhdenii_ot_raskritiya|bootstrap }}
+            {{ form.nomer_otkaza_v_osvobozhdenii_ot_raskritiya|bootstrap }}
+          </div>
+          <div class="col-sm-6">
+            {{ form.osvobozhdeny_ot_raskrytiya|bootstrap }}
+            {{ form.nomer_resheniya_ob_osvobozhdenii|bootstrap }}
+            {{ form.data_otkaza_v_osvobozhdenii_ot_raskritiya|bootstrap }}
+
+          </div>
+          <input style="margin-top: 20px; margin-right: 900px;" class='btn btn-primary'  type="submit" value="Сохранить" />
+        </form>
+
+<br> <br> <br>
+
+<div style="font-family: helvetica; font-weight: bold; text-align: left; font-size: 22px; color: #2e6da4;">Раскрытие информации</div>
+<br> <br>
+        <form method="post" action="">
+          {% csrf_token %}
+          <div class="col-sm-6">
+            <br> <br> <br>
+          <div style="margin-top: 9px;">{{form.proverka_raskritiya|bootstrap }}</div>
+          </div>
+          <div class="col-sm-6">
+           <div style="font-family: helvetica; font-weight: bold; text-align: left; font-size: 20px;">Сведения о ранее проведенных проверках</div>
+           <br> <br>
+            {{ form.data_proverki|bootstrap }}
+            <br>
+            {{ form.data_predpisaniya_po_neraskritiyu_informacii|bootstrap }}
+            {{ form.nomer_predpisaniya_po_neraskritiyu_informacii|bootstrap }}
+            <br>
+            {{ form.data_zaprosa_po_neraskritiyu_informacii|bootstrap }}
+            {{ form.nomer_zaprosa_po_neraskritiyu_informacii|bootstrap }}
+
+          </div>
+          <input style="margin-top: 20px; margin-right: 900px;" class='btn btn-primary'  type="submit" value="Сохранить" />
+        </form>
+
+<br> <br> <br>
+        
+            
+            
+     <!--       {{ form.nomer_otveta_na_zaprosa_o_rezultatah_provedeniya_torgov_v_obchestve|bootstrap }}
+            {{ form.otkaz_v_registracii_vipuska|bootstrap}} -->
+            
+            
+
+
+       </div>
+        </div>
+    </div>
+
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/jquery-ui/jquery-ui.min.js' %}"></script>
+  <script src="{% static 'js/pager/paging.js' %}"></script>
+  <script src="{% static 'js/nprogress/nprogress.js' %}"></script>
+  <script src="{% static 'js/custom.js' %}"></script>
+  <script>window.jQuery || document.write('<script src="{% static 'js/jquery.min.js' %}"><\/script>')</script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
+</body>
+</html>
